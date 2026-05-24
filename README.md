@@ -1,4 +1,5 @@
-# Brian's Claude for Visual Studio (The first of a collection of Plugins for teaching.
+# Brian's Claude for Visual Studio 
+(The first of a collection of Plugins for teaching.)
 
 A Visual Studio 2022/2026 extension that replaces GitHub Copilot with [Claude](https://claude.ai) (Anthropic) as your primary AI assistant.
 
