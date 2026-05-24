@@ -71,7 +71,13 @@ MIT — see [LICENSE](LICENSE).
 
 Pull requests welcome. Please open an issue first for significant changes.
 
-> * [Code of Conduct](code_of_conduct.md)
-> * [Contributing](CONTRIBUTING.md)
-> * [License](LICENSE.md)
-> * [Read Me](README.md)
+***
+
+
+### Important Links
+* [OWASP Top 10](https://owasp.org/Top10/2025/0x00_2025-Introduction/)
+* [GitBook](https://app.gitbook.com/o/69pAjvbfN9CTDmbOd9Lo/s/7hOkIuy9zddqIo5IHBtu/)
+* [Code of Conduct](code_of_conduct.md)
+* [Contributing](CONTRIBUTING.md)
+* [License](LICENSE.md)
+* [Read Me](README.md)
