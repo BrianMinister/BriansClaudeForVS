@@ -1,0 +1,58 @@
+<UserControl x:Class="BriansClaudeVS.Options.OptionsPageControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             Padding="12">
+
+    <StackPanel>
+        <TextBlock Text="Brian's Claude for Visual Studio"
+                   FontSize="14" FontWeight="Bold" Margin="0 0 0 16"/>
+
+        <!-- API Key -->
+        <TextBlock Text="Anthropic API Key" FontWeight="SemiBold" Margin="0 0 0 4"/>
+        <TextBlock Text="Your key is encrypted with DPAPI and never stored in plaintext."
+                   Foreground="Gray" FontSize="11" Margin="0 0 0 6"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <PasswordBox x:Name="ApiKeyBox" Grid.Column="0"
+                         PasswordChanged="ApiKeyBox_PasswordChanged"
+                         Margin="0 0 8 0"/>
+            <Button x:Name="VerifyButton" Grid.Column="1"
+                    Content="Verify Key" Click="VerifyButton_Click"
+                    Padding="12 4"/>
+        </Grid>
+        <TextBlock x:Name="VerifyStatus" Margin="0 4 0 16" FontSize="11"/>
+
+        <!-- Chat Model -->
+        <TextBlock Text="Chat Model" FontWeight="SemiBold" Margin="0 0 0 4"/>
+        <ComboBox x:Name="ChatModelCombo" Margin="0 0 0 16" SelectedValuePath="Tag">
+            <ComboBoxItem Content="claude-opus-4-5 (Best quality)" Tag="claude-opus-4-5"/>
+            <ComboBoxItem Content="claude-sonnet-4-6 (Balanced)" Tag="claude-sonnet-4-6"/>
+            <ComboBoxItem Content="claude-haiku-4-5 (Fastest)" Tag="claude-haiku-4-5-20251001"/>
+        </ComboBox>
+
+        <!-- Inline Completion Model -->
+        <TextBlock Text="Inline Completion Model" FontWeight="SemiBold" Margin="0 0 0 4"/>
+        <ComboBox x:Name="InlineModelCombo" Margin="0 0 0 16" SelectedValuePath="Tag">
+            <ComboBoxItem Content="claude-haiku-4-5 (Recommended — fastest)" Tag="claude-haiku-4-5-20251001" IsSelected="True"/>
+            <ComboBoxItem Content="claude-sonnet-4-6" Tag="claude-sonnet-4-6"/>
+            <ComboBoxItem Content="claude-opus-4-5 (Slowest)" Tag="claude-opus-4-5"/>
+        </ComboBox>
+
+        <!-- Enable inline completions -->
+        <CheckBox x:Name="EnableInlineCheck"
+                  Content="Enable inline code completions (ghost text)"
+                  Margin="0 0 0 12"/>
+
+        <!-- Max context tokens -->
+        <TextBlock Text="Max chat context (tokens)" FontWeight="SemiBold" Margin="0 0 0 4"/>
+        <Slider x:Name="MaxTokensSlider"
+                Minimum="2000" Maximum="16000" TickFrequency="1000"
+                IsSnapToTickEnabled="True" Margin="0 0 0 4"/>
+        <TextBlock x:Name="MaxTokensLabel" Margin="0 0 0 16"/>
+    </StackPanel>
+
+</UserControl>

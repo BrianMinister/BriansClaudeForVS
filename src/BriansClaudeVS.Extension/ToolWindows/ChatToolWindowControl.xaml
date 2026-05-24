@@ -1,0 +1,150 @@
+<UserControl x:Class="BriansClaudeVS.ToolWindows.ChatToolWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:BriansClaudeVS.ToolWindows.ViewModels"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+             x:Name="Root">
+
+    <UserControl.Resources>
+        <!-- User bubble style -->
+        <Style x:Key="UserBubble" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarSelectedBorderBrushKey}}"/>
+            <Setter Property="CornerRadius" Value="8 8 2 8"/>
+            <Setter Property="Padding" Value="10 6"/>
+            <Setter Property="Margin" Value="48 4 4 4"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <!-- Assistant bubble style -->
+        <Style x:Key="AssistantBubble" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBorderBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8 8 8 2"/>
+            <Setter Property="Padding" Value="10 6"/>
+            <Setter Property="Margin" Value="4 4 48 4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+
+        <!-- Top bar -->
+        <Border DockPanel.Dock="Top"
+                BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBorderBrushKey}}"
+                BorderThickness="0 0 0 1"
+                Padding="8 6">
+            <DockPanel>
+                <TextBlock Text="Brian's Claude" FontWeight="SemiBold"
+                           Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+                           VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right" Content="Clear"
+                        Command="{Binding ClearCommand}"
+                        Padding="8 2" Margin="4 0 0 0"
+                        VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Input area -->
+        <Grid DockPanel.Dock="Bottom" Margin="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Slash command popup -->
+            <Popup x:Name="SlashPopup" Grid.Row="0"
+                   PlacementTarget="{Binding ElementName=InputBox}"
+                   Placement="Top"
+                   StaysOpen="False"
+                   IsOpen="{Binding SlashMatches.Count, Converter={StaticResource CountToBoolConverter}}">
+                <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                        BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBorderBrushKey}}"
+                        BorderThickness="1" CornerRadius="4" Padding="4">
+                    <ItemsControl ItemsSource="{Binding SlashMatches}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Name}"
+                                        ToolTip="{Binding Description}"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="6 4"
+                                        Click="SlashCommand_Click"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </Popup>
+
+            <!-- Input text box + send button -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="InputBox" Grid.Column="0"
+                         Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="False"
+                         TextWrapping="Wrap"
+                         MaxHeight="120"
+                         Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+                         Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                         BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBorderBrushKey}}"
+                         Padding="6 4"
+                         KeyDown="InputBox_KeyDown"
+                         VerticalScrollBarVisibility="Auto"/>
+                <Button Grid.Column="1" Content="Send"
+                        Command="{Binding SendCommand}"
+                        Padding="12 4" Margin="6 0 0 0"
+                        VerticalAlignment="Bottom"/>
+            </Grid>
+        </Grid>
+
+        <!-- Message list -->
+        <ScrollViewer x:Name="MessageScroller"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="0 4">
+            <ItemsControl ItemsSource="{Binding Messages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:ChatMessageViewModel}">
+                        <ContentControl>
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Side}" Value="User">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Border Style="{StaticResource UserBubble}">
+                                                            <TextBlock Text="{Binding Text}"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Side}" Value="Assistant">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Border Style="{StaticResource AssistantBubble}">
+                                                            <TextBlock Text="{Binding Text}"
+                                                                       TextWrapping="Wrap"
+                                                                       FontFamily="Consolas, Courier New, monospace"
+                                                                       Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+
+</UserControl>

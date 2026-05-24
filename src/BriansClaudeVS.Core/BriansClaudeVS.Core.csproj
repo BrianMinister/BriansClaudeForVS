@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>BriansClaudeVS.Core</RootNamespace>
+    <AssemblyName>BriansClaudeVS.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Official Anthropic .NET SDK -->
+    <PackageReference Include="Anthropic" Version="0.*" />
+    <!-- DPAPI wrapper for .NET 8 -->
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.*" />
+    <!-- HTTP client factory for testability -->
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.*" />
+    <!-- Retry + circuit breaker for API calls -->
+    <PackageReference Include="Polly" Version="8.4.*" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.*" />
+  </ItemGroup>
+
+</Project>

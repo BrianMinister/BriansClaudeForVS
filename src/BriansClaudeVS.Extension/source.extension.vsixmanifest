@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="BriansClaudeVS.DE73F1AB-E288-45B5-956D-0F9CC77A3B2A"
+              Version="1.0.0"
+              Language="en-US"
+              Publisher="BrianProgrammer"/>
+    <DisplayName>Brian's Claude for Visual Studio</DisplayName>
+    <Description xml:space="preserve">
+      Replaces GitHub Copilot with Claude (Anthropic) as your primary AI assistant in Visual Studio.
+      Provides inline code completions, a chat window, slash commands, and lightbulb code actions.
+      Bring your own Anthropic API key — configured via Tools &gt; Options &gt; Brian's Claude.
+    </Description>
+    <Tags>AI, Claude, Anthropic, Code Completion, Chat, Copilot Replacement</Tags>
+    <GettingStartedGuide>https://github.com/BrianProgrammer/BriansClaudeForVS#getting-started</GettingStartedGuide>
+    <Icon>Resources\ClaudeIcon.png</Icon>
+    <PreviewImage>assets\preview.png</PreviewImage>
+  </Metadata>
+
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[17.0,)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,)" />
+  </Installation>
+
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName=".NET Framework 4.7.2 or later"
+                d:Source="Manual" Version="[4.7.2,)" />
+  </Dependencies>
+
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor"
+                  Version="[17.0,)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%"
+           Path="|BriansClaudeVS.Extension;PkgdefProjectOutputGroup|"/>
+  </Assets>
+</PackageManifest>

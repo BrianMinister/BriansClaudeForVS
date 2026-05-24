@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable"
+              xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidBriansClaudeVSPackage">
+
+    <Groups>
+      <Group guid="guidBriansClaudeVSCmdSet" id="BriansClaudeMenuGroup" priority="0x0600">
+        <!-- Place the group in the View menu -->
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_VIEW"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidBriansClaudeVSCmdSet" id="OpenChatWindowCommandId"
+              priority="0x0100" type="Button">
+        <Parent guid="guidBriansClaudeVSCmdSet" id="BriansClaudeMenuGroup"/>
+        <Icon guid="guidImages" id="bmpPic1"/>
+        <Strings>
+          <ButtonText>Brian's Claude Chat</ButtonText>
+          <CommandName>BriansClaudeChat</CommandName>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\ClaudeIcon.png" usedList="bmpPic1"/>
+    </Bitmaps>
+
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="guidBriansClaudeVSPackage"
+                value="{DE73F1AB-E288-45B5-956D-0F9CC77A3B2A}"/>
+    <GuidSymbol name="guidBriansClaudeVSCmdSet"
+                value="{7B431BC8-DDFC-485F-BFC5-772FF0EFC7C8}">
+      <IDSymbol name="BriansClaudeMenuGroup" value="0x1020"/>
+      <IDSymbol name="OpenChatWindowCommandId" value="0x0100"/>
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{8D73DD3B-9E62-466E-AC14-8D997F8CAD66}">
+      <IDSymbol name="bmpPic1" value="1"/>
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>

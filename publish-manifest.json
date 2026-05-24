@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/vsix-publish",
+  "categories": ["AI Tools", "Coding"],
+  "identity": {
+    "internalName": "BriansClaudeForVS"
+  },
+  "overview": "README.md",
+  "priceCategory": "free",
+  "publisher": "BrianProgrammer",
+  "private": false,
+  "qna": true,
+  "repo": "https://github.com/BrianProgrammer/BriansClaudeForVS"
+}
