@@ -103,7 +103,10 @@ At the moment, all Pull Requests are approved by the admin.
 # Community
 If there are other channels you use besides GitHub to discuss contributions, mention them here. You can also list the author, maintainers, and/or contributors here, or set expectations for response time.
 
-> * [Code of Conduct](code_of_conduct.md)
-> * [Contributing](CONTRIBUTING.md)
-> * [License](LICENSE.md)
-> * [Read Me](README.md)
+### Important Links
+* [OWASP Top 10](https://owasp.org/Top10/2025/0x00_2025-Introduction/)
+* [GitBook](https://app.gitbook.com/o/69pAjvbfN9CTDmbOd9Lo/s/7hOkIuy9zddqIo5IHBtu/)
+* [Code of Conduct](code_of_conduct.md)
+* [Contributing](CONTRIBUTING.md)
+* [License](LICENSE.md)
+* [Read Me](README.md)
