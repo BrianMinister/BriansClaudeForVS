@@ -70,3 +70,9 @@ MIT — see [LICENSE](LICENSE).
 ## Contributing
 
 Pull requests welcome. Please open an issue first for significant changes.
+
+> * [Code of Conduct](code_of_conduct.md)
+> * []()
+> * []()
+> * []()
+> * []()
