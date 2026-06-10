@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <OutputType>Library</OutputType>
+    <!-- Opt in to the VSSDK build pipeline (VSCT compile, pkgdef, VSIX packaging, Exp-instance deploy).
+         Without this, Microsoft.VSSDK.targets is never imported and no VSIX is produced. -->
+    <VSSDKBuildToolsAutoSetup>true</VSSDKBuildToolsAutoSetup>
+    <!-- Deploy to the Exp instance on Debug builds inside Visual Studio.
+         Deliberately not enabled for CLI 'dotnet build', which the VSSDK targets reject. -->
+    <DeployExtension Condition="'$(Configuration)' == 'Debug' AND '$(BuildingInsideVisualStudio)' == 'true'">true</DeployExtension>
     <UseCodebase>true</UseCodebase>
-    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <!-- CreatePkgDef.exe is .NET Framework-only and cannot load this .NET 10 assembly;
+         registration ships as the hand-authored BriansClaudeVS.Extension.pkgdef instead -->
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
@@ -48,12 +56,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Manifest-referenced assets must travel inside the VSIX container -->
+    <None Remove="Resources\ClaudeIcon.png" />
+    <None Remove="assets\preview.png" />
+    <Content Include="Resources\ClaudeIcon.png" />
+    <Content Include="assets\preview.png" />
+    <None Remove="BriansClaudeVS.Extension.pkgdef" />
+    <Content Include="BriansClaudeVS.Extension.pkgdef" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="VSPackage.vsct">
+    <VSCTCompile Include="VSPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
-    </None>
+    </VSCTCompile>
   </ItemGroup>
 
 </Project>

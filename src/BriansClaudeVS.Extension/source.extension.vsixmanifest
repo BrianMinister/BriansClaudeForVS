@@ -12,17 +12,32 @@
       Provides inline code completions, a chat window, slash commands, and lightbulb code actions.
       Bring your own Anthropic API key — configured via Tools &gt; Options &gt; Brian's Claude.
     </Description>
-    <Tags>AI, Claude, Anthropic, Code Completion, Chat, Copilot Replacement</Tags>
     <GettingStartedGuide>https://github.com/BrianProgrammer/BriansClaudeForVS#getting-started</GettingStartedGuide>
     <Icon>Resources\ClaudeIcon.png</Icon>
     <PreviewImage>assets\preview.png</PreviewImage>
+    <Tags>AI, Claude, Anthropic, Code Completion, Chat, Copilot Replacement</Tags>
   </Metadata>
 
   <Installation>
     <!-- 18.0 floor: the extension targets .NET 10 and the 18.x SDK, so it requires VS 2026+ -->
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[18.0,)" />
-    <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[18.0,)" />
-    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[18.0,)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[18.0,)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[18.0,)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[18.0,)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[18.0,)">
+      <ProductArchitecture>arm64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Professional" Version="[18.0,)">
+      <ProductArchitecture>arm64</ProductArchitecture>
+    </InstallationTarget>
+    <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[18.0,)">
+      <ProductArchitecture>arm64</ProductArchitecture>
+    </InstallationTarget>
   </Installation>
 
   <Dependencies>
@@ -36,7 +51,6 @@
   </Prerequisites>
 
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%"
-           Path="|BriansClaudeVS.Extension;PkgdefProjectOutputGroup|"/>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="BriansClaudeVS.Extension.pkgdef"/>
   </Assets>
 </PackageManifest>
