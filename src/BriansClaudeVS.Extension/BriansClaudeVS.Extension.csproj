@@ -31,8 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- VS SDK meta-package — update version to match your VS 2026 installation -->
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
+    <!-- VS 2026 (18.x) SDK meta-package — served from the vssdk feed (see NuGet.config) -->
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="18.2.38048" />
+    <!-- Override the SDK's transitive OpenTelemetry.Api 1.12.0, which has a known vulnerability (NU1902) -->
+    <PackageReference Include="OpenTelemetry.Api" Version="1.15.3" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.6.38345">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
