@@ -1,23 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>BriansClaudeVS.Core</RootNamespace>
     <AssemblyName>BriansClaudeVS.Core</AssemblyName>
+    <AssemblyTitle></AssemblyTitle>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Official Anthropic .NET SDK -->
-    <PackageReference Include="Anthropic" Version="0.*" />
-    <!-- DPAPI wrapper for .NET 8 -->
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.*" />
+    <PackageReference Include="Anthropic" Version="12.29.0" />
+    <!-- DPAPI wrapper -->
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.9" />
     <!-- HTTP client factory for testability -->
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
     <!-- Retry + circuit breaker for API calls -->
-    <PackageReference Include="Polly" Version="8.4.*" />
-    <PackageReference Include="Polly.Extensions.Http" Version="3.0.*" />
+    <PackageReference Include="Polly" Version="8.6.6" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

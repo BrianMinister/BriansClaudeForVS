@@ -7,7 +7,7 @@ namespace BriansClaudeVS.Options;
 
 [ComVisible(true)]
 [Guid("80E18F5B-575D-49E2-880F-40314FC7656A")]
-public class ClaudeOptionsPage : DialogPage
+public class ClaudeOptionsPage : UIElementDialogPage
 {
     private OptionsPageControl? _control;
 

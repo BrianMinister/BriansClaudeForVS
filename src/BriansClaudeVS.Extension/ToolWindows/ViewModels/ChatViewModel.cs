@@ -77,7 +77,8 @@ public class ChatViewModel : INotifyPropertyChanged
 
         InputText = string.Empty;
         IsBusy = true;
-        _cts?.Cancel();
+        if (_cts is { } previousCts)
+            await previousCts.CancelAsync();
         _cts = new CancellationTokenSource();
         var ct = _cts.Token;
 

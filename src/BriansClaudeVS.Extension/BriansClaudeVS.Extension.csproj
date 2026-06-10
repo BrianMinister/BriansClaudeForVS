@@ -1,11 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- VSIX extensions target net472 for the VS extension host -->
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <OutputType>Library</OutputType>
+    <!-- Opt in to the VSSDK build pipeline (VSCT compile, pkgdef, VSIX packaging, Exp-instance deploy).
+         Without this, Microsoft.VSSDK.targets is never imported and no VSIX is produced. -->
+    <VSSDKBuildToolsAutoSetup>true</VSSDKBuildToolsAutoSetup>
+    <!-- Deploy to the Exp instance on Debug builds inside Visual Studio.
+         Deliberately not enabled for CLI 'dotnet build', which the VSSDK targets reject. -->
+    <DeployExtension Condition="'$(Configuration)' == 'Debug' AND '$(BuildingInsideVisualStudio)' == 'true'">true</DeployExtension>
     <UseCodebase>true</UseCodebase>
-    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <!-- CreatePkgDef.exe is .NET Framework-only and cannot load this .NET 10 assembly;
+         registration ships as the hand-authored BriansClaudeVS.Extension.pkgdef instead -->
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
     <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
@@ -17,30 +24,55 @@
     <RootNamespace>BriansClaudeVS</RootNamespace>
     <AssemblyName>BriansClaudeVS.Extension</AssemblyName>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- NU1701: VS SDK packages only ship .NET Framework targets; expected when targeting net10.0-windows.
+         WFO1000: WinForms designer-serialization analyzer; DialogPage-derived types are not designer components. -->
+    <NoWarn>$(NoWarn);NU1701;WFO1000</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- VS SDK meta-package — update version to match your VS 2026 installation -->
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.10.*">
+    <!-- UseWindowsForms is only set for the System.Design reference (OleMenuCommandService);
+         the UI is WPF, so drop the implicit WinForms using to avoid type ambiguity -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- VS 2026 (18.x) SDK meta-package — served from the vssdk feed (see NuGet.config) -->
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="18.2.38048" />
+    <!-- Override the SDK's transitive OpenTelemetry.Api 1.12.0, which has a known vulnerability (NU1902) -->
+    <PackageReference Include="OpenTelemetry.Api" Version="1.15.3" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.6.38345">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <!-- Roslyn for CodeRefactoringProvider -->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.*" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.3.0" />
     <!-- Markdown rendering in chat window -->
-    <PackageReference Include="Markdig" Version="0.38.*" />
+    <PackageReference Include="Markdig" Version="1.2.0" />
     <!-- Core project reference -->
     <ProjectReference Include="..\BriansClaudeVS.Core\BriansClaudeVS.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Manifest-referenced assets must travel inside the VSIX container -->
+    <None Remove="Resources\ClaudeIcon.png" />
+    <None Remove="assets\preview.png" />
+    <Content Include="Resources\ClaudeIcon.png" />
+    <Content Include="assets\preview.png" />
+    <None Remove="BriansClaudeVS.Extension.pkgdef" />
+    <Content Include="BriansClaudeVS.Extension.pkgdef" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="VSPackage.vsct">
+    <VSCTCompile Include="VSPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
-    </None>
+    </VSCTCompile>
   </ItemGroup>
 
 </Project>

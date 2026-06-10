@@ -24,7 +24,7 @@ internal sealed class OpenChatWindowCommand
         new OpenChatWindowCommand(package, commandService);
     }
 
-    private void Execute(object sender, EventArgs e)
+    private void Execute(object? sender, EventArgs e)
     {
         _ = _package.JoinableTaskFactory.RunAsync(async () =>
         {
