@@ -2,8 +2,11 @@ using BriansClaudeVS.Core.Api;
 using BriansClaudeVS.Core.Credentials;
 using BriansClaudeVS.Core.SlashCommands;
 using Microsoft.Extensions.Http;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Net.Http;
 
 namespace BriansClaudeVS;
 
@@ -48,7 +51,7 @@ internal sealed class VsSettingsStoreAccessor : ISettingsStoreAccessor
     private IVsWritableSettingsStore GetStore()
     {
         ThreadHelper.ThrowIfNotOnUIThread();
-        var settingsManager = (IVsSettingsManager)_package.GetService(typeof(SVsSettingsManager))!;
+        var settingsManager = _package.GetService<SVsSettingsManager, IVsSettingsManager>();
         settingsManager.GetWritableSettingsStore(
             (uint)__VsEnclosingScopes.EnclosingScopes_UserSettings,
             out var store);
@@ -59,7 +62,8 @@ internal sealed class VsSettingsStoreAccessor : ISettingsStoreAccessor
     {
         ThreadHelper.ThrowIfNotOnUIThread();
         var store = GetStore();
-        if (!store.CollectionExists(collectionPath, out _))
+        store.CollectionExists(collectionPath, out var exists);
+        if (exists == 0)
             store.CreateCollection(collectionPath);
         store.SetString(collectionPath, propertyName, value);
     }
@@ -68,8 +72,10 @@ internal sealed class VsSettingsStoreAccessor : ISettingsStoreAccessor
     {
         ThreadHelper.ThrowIfNotOnUIThread();
         var store = GetStore();
-        if (!store.CollectionExists(collectionPath, out _)) return null;
-        store.GetString(collectionPath, propertyName, out var result);
+        store.CollectionExists(collectionPath, out var exists);
+        if (exists == 0) return null;
+        if (ErrorHandler.Failed(store.GetString(collectionPath, propertyName, out var result)))
+            return null;
         return string.IsNullOrEmpty(result) ? null : result;
     }
 
@@ -77,7 +83,8 @@ internal sealed class VsSettingsStoreAccessor : ISettingsStoreAccessor
     {
         ThreadHelper.ThrowIfNotOnUIThread();
         var store = GetStore();
-        if (store.CollectionExists(collectionPath, out _))
+        store.CollectionExists(collectionPath, out var exists);
+        if (exists != 0)
             store.DeleteProperty(collectionPath, propertyName);
     }
 }

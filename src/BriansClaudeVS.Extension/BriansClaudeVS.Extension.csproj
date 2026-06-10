@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- VSIX extensions target net472 for the VS extension host -->
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
@@ -17,19 +16,31 @@
     <RootNamespace>BriansClaudeVS</RootNamespace>
     <AssemblyName>BriansClaudeVS.Extension</AssemblyName>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- NU1701: VS SDK packages only ship .NET Framework targets; expected when targeting net10.0-windows.
+         WFO1000: WinForms designer-serialization analyzer; DialogPage-derived types are not designer components. -->
+    <NoWarn>$(NoWarn);NU1701;WFO1000</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- UseWindowsForms is only set for the System.Design reference (OleMenuCommandService);
+         the UI is WPF, so drop the implicit WinForms using to avoid type ambiguity -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- VS SDK meta-package — update version to match your VS 2026 installation -->
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.31902.203" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.10.*">
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.6.38345">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <!-- Roslyn for CodeRefactoringProvider -->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.*" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.3.0" />
     <!-- Markdown rendering in chat window -->
-    <PackageReference Include="Markdig" Version="0.38.*" />
+    <PackageReference Include="Markdig" Version="1.2.0" />
     <!-- Core project reference -->
     <ProjectReference Include="..\BriansClaudeVS.Core\BriansClaudeVS.Core.csproj" />
   </ItemGroup>

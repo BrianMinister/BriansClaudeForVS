@@ -13,9 +13,7 @@ namespace BriansClaudeVS;
 [ProvideToolWindow(typeof(ChatToolWindow), Style = VsDockStyle.Tabbed, DockedWidth = 400,
     Window = "DocumentWell", Orientation = ToolWindowOrientation.Right)]
 [ProvideOptionPage(typeof(ClaudeOptionsPage),
-    "Brian's Claude", "General",
-    categoryResourceID: 0, pageResourceID: 0,
-    supportsAutomation: true)]
+    "Brian's Claude", "General", 0, 0, true)]
 [ProvideAutoLoad(Microsoft.VisualStudio.Shell.Interop.UIContextGuids80.SolutionExists,
     PackageAutoLoadFlags.BackgroundLoad)]
 public sealed class BriansClaudeVSPackage : AsyncPackage
