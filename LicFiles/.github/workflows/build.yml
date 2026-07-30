@@ -1,0 +1,44 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore BriansClaudeForVS.sln
+
+      - name: Build solution
+        run: msbuild BriansClaudeForVS.sln /p:Configuration=Release /p:DeployExtension=false
+
+      - name: Run unit tests
+        run: dotnet test src/BriansClaudeVS.Tests/BriansClaudeVS.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Unit Tests
+          path: "**/*.trx"
+          reporter: dotnet-trx
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BriansClaudeVS-${{ github.sha }}
+          path: src/BriansClaudeVS.Extension/bin/Release/*.vsix
+          if-no-files-found: warn

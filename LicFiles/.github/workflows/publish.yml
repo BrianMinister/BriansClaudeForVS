@@ -1,0 +1,53 @@
+name: Publish to VS Marketplace
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  sign-and-publish:
+    runs-on: windows-latest
+    environment: marketplace
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore BriansClaudeForVS.sln
+
+      - name: Build Release
+        run: msbuild BriansClaudeForVS.sln /p:Configuration=Release /p:DeployExtension=false
+
+      - name: Run tests (gate)
+        run: dotnet test src/BriansClaudeVS.Tests/BriansClaudeVS.Tests.csproj --configuration Release
+
+      - name: Install OpenVsixSignTool
+        run: dotnet tool install --global OpenVsixSignTool
+
+      - name: Decode signing certificate
+        run: |
+          $certBytes = [Convert]::FromBase64String("${{ secrets.SIGNING_CERT_BASE64 }}")
+          [IO.File]::WriteAllBytes("signing.pfx", $certBytes)
+        shell: pwsh
+
+      - name: Sign VSIX
+        run: |
+          OpenVsixSignTool sign `
+            --pkcs12 signing.pfx `
+            --pkcs12-password "${{ secrets.SIGNING_CERT_PASSWORD }}" `
+            --timestamp-url "http://timestamp.digicert.com" `
+            src/BriansClaudeVS.Extension/bin/Release/BriansClaudeVS.Extension.vsix
+        shell: pwsh
+
+      - name: Publish to VS Marketplace
+        uses: cezarypiatek/VsixPublisherAction@1.1
+        with:
+          extension-file: src/BriansClaudeVS.Extension/bin/Release/BriansClaudeVS.Extension.vsix
+          publish-manifest-file: publish-manifest.json
+          personal-access-token: ${{ secrets.VS_MARKETPLACE_TOKEN }}
